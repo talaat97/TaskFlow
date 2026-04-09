@@ -47,13 +47,13 @@ The mock API is powered by Node.js. It is included directly in this repository i
 # Navigate to the mock API folder inside the project
 cd mock-api/
 
-# 1. Install dependencies
+# 1. Install dependencies (First time only)
 npm install
 
-# 2. Run the database setup script (Hashes passwords using bcrypt)
+# 2. Setup the database with hashed passwords (First time only)
 npm run setup
 
-# 3. Start the server
+# 3. Start the server (Run this EVERY time)
 npm start
 ```
 The server will start on `http://localhost:3000`. 
@@ -71,7 +71,7 @@ For **Android Emulators & Real Devices**, Android blocks cleartext HTTP (which t
 The best way to bypass Windows/Mac firewall restrictions is using an `adb reverse` tunnel. This maps your phone's localhost to your PC's localhost.
 
 1. Ensure your device is connected via USB and USB debugging is on.
-2. Run this command in your terminal:
+2. Run this command in your terminal (Run this EVERY time you re-plug your phone):
    ```bash
    adb reverse tcp:3000 tcp:3000
    ```

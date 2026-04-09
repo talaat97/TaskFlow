@@ -3,11 +3,20 @@
     {
       "id": 1,
       "email": "test@example.com",
-      "password": "$2a$10$h1OYjjEP8NW.qBLqdbf6OuH8Q8CZynqpcREFpUQYfH0mBjF31zyK.",
+      "password": "$2a$10$Y1XNvNDkBEKybC5YLY8eDeMnXKDvMQd6nFfWxuAuEvRFH52h6..8q",
       "name": "John Doe"
     }
   ],
   "tasks": [
+    {
+      "id": 1,
+      "title": "Design system architecture",
+      "description": "Define the component library and design tokens for the new product dashboard. Includes color palette, typography, spacing, and component specs.",
+      "status": "done",
+      "priority": "high",
+      "dueDate": "2026-03-28",
+      "assignedUser": "John Doe"
+    },
     {
       "id": 2,
       "title": "Implement authentication flow",
@@ -52,24 +61,6 @@
       "priority": "low",
       "dueDate": "2026-04-30",
       "assignedUser": "Alex Johnson"
-    },
-    {
-      "title": "فكرني اشرب ميه",
-      "description": "اشرب ميه عدد 3 لتر في اليو",
-      "status": "todo",
-      "priority": "medium",
-      "dueDate": "2026-04-12",
-      "assignedUser": "home",
-      "id": 7
-    },
-    {
-      "id": 8,
-      "title": "Teat",
-      "description": "Test",
-      "status": "done",
-      "priority": "high",
-      "dueDate": "2026-04-16",
-      "assignedUser": ""
     }
   ]
 }
