@@ -7,13 +7,6 @@ Designed to demonstrate solid architectural patterns, secure authentication, and
 ![TaskFlow App Demo](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)
 ![State Management](https://img.shields.io/badge/State_Management-Riverpod-blueviolet)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen)
-![WhatsApp Image 2026-04-09 at 7 51 41 PM (2)](https://github.com/user-attachments/assets/145b4008-0a4a-4944-be9b-95621467f31e)
-![WhatsApp Image 2026-04-09 at 7 51 41 PM (1)](https://github.com/user-attachments/assets/f0fbb09f-5ba5-41dd-a0eb-c017cbe2a29c)
-![Uploading WhatsApp Image 2026-04-09 at 7.51.40 PM (2).jpeg…]()
-![WhatsApp Image 2026-04-09 at 7 51 40 PM (1)](https://github.com/user-attachments/assets/2e4a7a37-38ee-47d0-bb9c-37e59a301423)
-![WhatsApp Image 2026-04-09 at 7 51 41 PM](https://github.com/user-attachments/assets/64e54939-7f7b-4c59-bf15-def86bb20784)
-![WhatsApp Image 2026-04-09 at 7 51 40 PM](https://github.com/user-attachments/assets/30354c6d-9129-49ad-802e-2b74d2e36783)
-
 
 https://github.com/user-attachments/assets/290d832f-d4d0-423c-8fd7-d0202df7cf85
 
