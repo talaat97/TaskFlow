@@ -8,7 +8,9 @@ Designed to demonstrate solid architectural patterns, secure authentication, and
 ![State Management](https://img.shields.io/badge/State_Management-Riverpod-blueviolet)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen)
 
----
+https://github.com/user-attachments/assets/290d832f-d4d0-423c-8fd7-d0202df7cf85
+
+
 
 ## ✨ Features
 
@@ -125,7 +127,6 @@ lib/
         ├── domain/ 
         └── presentation/ 
 ```
-
 ## 📦 Key Dependencies
 
 - [`flutter_riverpod`](https://pub.dev/packages/flutter_riverpod): Reactive State Management
