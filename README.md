@@ -37,12 +37,12 @@ This project relies on a custom local `json-server-auth` mock API. You must run 
 
 ### Step 1: Start the Mock API
 
-The mock API is powered by Node.js. 
+The mock API is powered by Node.js. It is included directly in this repository in the `mock-api` folder.
 
 > **Important:** Keep the API running in a separate terminal while you test the Flutter app.
 
 ```bash
-# Navigate to the mock API folder
+# Navigate to the mock API folder inside the project
 cd mock-api/
 
 # 1. Install dependencies
