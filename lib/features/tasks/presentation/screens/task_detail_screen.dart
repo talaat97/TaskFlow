@@ -19,7 +19,8 @@ class TaskDetailScreen extends ConsumerWidget {
 
     return tasksAsync.when(
       loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator(color: AppColors.accent)),
+        body: Center(
+            child: CircularProgressIndicator(color: AppColors.accent)),
       ),
       error: (e, _) => Scaffold(
         appBar: AppBar(title: const Text('Task')),
@@ -29,8 +30,9 @@ class TaskDetailScreen extends ConsumerWidget {
       ),
       data: (tasks) {
         final id = int.tryParse(taskId);
-        final task =
-            id != null ? tasks.where((t) => t.id == id).firstOrNull : null;
+        final task = id != null
+            ? tasks.where((t) => t.id == id).firstOrNull
+            : null;
 
         if (task == null) {
           return Scaffold(
@@ -67,10 +69,10 @@ class _TaskDetailView extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: Hero(
-                      tag: 'task-${task.id}',
+                  Hero(
+                    tag: 'task-${task.id}',
+                    child: Material(
+                      color: Colors.transparent,
                       child: Text(
                         task.title,
                         style: GoogleFonts.inter(
@@ -137,8 +139,8 @@ class _TaskDetailView extends ConsumerWidget {
         ),
         IconButton(
           tooltip: 'Delete',
-          icon:
-              const Icon(Icons.delete_outline_rounded, color: AppColors.error),
+          icon: const Icon(Icons.delete_outline_rounded,
+              color: AppColors.error),
           onPressed: () => _confirmDelete(context, ref),
         ),
         const SizedBox(width: 4),
@@ -157,8 +159,8 @@ class _TaskDetailView extends ConsumerWidget {
                 fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
         content: Text(
           'This action cannot be undone.',
-          style:
-              GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary),
+          style: GoogleFonts.inter(
+              fontSize: 13, color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
@@ -233,7 +235,8 @@ class _DetailGrid extends StatelessWidget {
           icon: Icons.calendar_today_rounded,
           label: 'Due date',
           value: dueFmt.isNotEmpty ? dueFmt : '—',
-          valueColor: task.isOverdue ? AppColors.overdue : null,
+          valueColor:
+              task.isOverdue ? AppColors.overdue : null,
         ),
         const SizedBox(height: 18),
         _Row(

@@ -273,122 +273,124 @@ class _TaskCard extends StatelessWidget {
     final dueFmt =
         due != null ? DateFormat('MMM d, yyyy').format(due) : task.dueDate;
 
-    return Material(
-      color: Colors.transparent,
-      child: GestureDetector(
-        onTap: () => context.push('/tasks/${task.id}'),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Hero(
-                      tag: 'task-${task.id}',
-                      child: Text(
-                        task.title,
-                        style: GoogleFonts.inter(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  StatusBadge.priority(task.priority),
-                ],
-              ),
-              if (task.description.isNotEmpty) ...[
-                const SizedBox(height: 6),
-                Text(
-                  task.description,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                    height: 1.45,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+    return Hero(
+      tag: 'task-${task.id}',
+      child: Material(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: () => context.push('/tasks/${task.id}'),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
-              const SizedBox(height: 12),
-              Row(
+            ),
+            child: ClipRect(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StatusBadge.status(task.status),
-                  const SizedBox(width: 8),
-                  if (task.isOverdue) ...[
-                    const OverdueBadge(),
-                    const SizedBox(width: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          task.title,
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      StatusBadge.priority(task.priority),
+                    ],
+                  ),
+                  if (task.description.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      task.description,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                        height: 1.45,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
-                  const Spacer(),
-                  if (due != null)
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      StatusBadge.status(task.status),
+                      const SizedBox(width: 8),
+                      if (task.isOverdue) ...[
+                        const OverdueBadge(),
+                        const SizedBox(width: 8),
+                      ],
+                      const Spacer(),
+                      if (due != null)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today_rounded,
+                              size: 11,
+                              color: task.isOverdue
+                                  ? AppColors.overdue
+                                  : AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              dueFmt,
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                color: task.isOverdue
+                                    ? AppColors.overdue
+                                    : AppColors.textSecondary,
+                                fontWeight: task.isOverdue
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                  if (task.assignedUser.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    const Divider(
+                      height: 1,
+                      color: AppColors.accentDim,
+                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Icon(
-                          Icons.calendar_today_rounded,
-                          size: 11,
-                          color: task.isOverdue
-                              ? AppColors.overdue
-                              : AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 4),
+                        _Avatar(name: task.assignedUser),
+                        const SizedBox(width: 8),
                         Text(
-                          dueFmt,
+                          task.assignedUser,
                           style: GoogleFonts.inter(
-                            fontSize: 11,
-                            color: task.isOverdue
-                                ? AppColors.overdue
-                                : AppColors.textSecondary,
-                            fontWeight: task.isOverdue
-                                ? FontWeight.w600
-                                : FontWeight.normal,
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
                     ),
+                  ],
                 ],
               ),
-              if (task.assignedUser.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                const Divider(
-                  height: 1,
-                  color: AppColors.accentDim,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    _Avatar(name: task.assignedUser),
-                    const SizedBox(width: 8),
-                    Text(
-                      task.assignedUser,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ],
+            ),
           ),
         ),
       ),
