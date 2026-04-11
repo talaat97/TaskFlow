@@ -43,12 +43,14 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authNotifierProvider).user;
-    final filteredAsync = ref.watch(filteredTasksProvider);
+    final filteredTasks = ref.watch(filteredTasksProvider);
+
     final filter = ref.watch(taskFilterProvider);
 
     ref.listen(taskListProvider, (_, next) {
       if (next is AsyncError) {
-        showErrorSnackBar(context, 'Failed to load tasks. Check your connection.');
+        showErrorSnackBar(
+            context, 'Failed to load tasks. Check your connection.');
       }
     });
 
@@ -61,14 +63,15 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
             _buildSearchBar(),
             _buildFilterChips(filter),
             const SizedBox(height: 4),
-            Expanded(child: _buildBody(filteredAsync)),
+            Expanded(child: _buildBody(filteredTasks)),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add_rounded),
-        label: Text('New Task', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        label: Text('New Task',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
         backgroundColor: AppColors.accent,
         foregroundColor: Colors.white,
       ),
@@ -111,15 +114,15 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
           ),
           IconButton(
             tooltip: 'Refresh',
-            onPressed: () =>
-                ref.read(taskListProvider.notifier).refresh(),
+            onPressed: () => ref.read(taskListProvider.notifier).refresh(),
             icon: const Icon(Icons.refresh_rounded,
                 color: AppColors.textSecondary),
           ),
           IconButton(
             tooltip: 'Logout',
             onPressed: _logout,
-            icon: const Icon(Icons.logout_rounded, color: AppColors.textSecondary),
+            icon: const Icon(Icons.logout_rounded,
+                color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -150,9 +153,7 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                               size: 18, color: AppColors.textSecondary),
                           onPressed: () {
                             _searchCtrl.clear();
-                            ref
-                                .read(taskFilterProvider.notifier)
-                                .setQuery('');
+                            ref.read(taskFilterProvider.notifier).setQuery('');
                           },
                         )
                       : null,
@@ -173,27 +174,27 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
           _FilterChip(
             label: 'To Do',
             color: AppColors.statusTodo,
-            selected: filter.statusFilter == 'todo',
+            selected: filter.status == 'todo',
             onTap: () => ref.read(taskFilterProvider.notifier).setStatus(
-                  filter.statusFilter == 'todo' ? null : 'todo',
+                  filter.status == 'todo' ? null : 'todo',
                 ),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: 'In Progress',
             color: AppColors.statusInProgress,
-            selected: filter.statusFilter == 'in_progress',
+            selected: filter.status == 'in_progress',
             onTap: () => ref.read(taskFilterProvider.notifier).setStatus(
-                  filter.statusFilter == 'in_progress' ? null : 'in_progress',
+                  filter.status == 'in_progress' ? null : 'in_progress',
                 ),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: 'Done',
             color: AppColors.statusDone,
-            selected: filter.statusFilter == 'done',
+            selected: filter.status == 'done',
             onTap: () => ref.read(taskFilterProvider.notifier).setStatus(
-                  filter.statusFilter == 'done' ? null : 'done',
+                  filter.status == 'done' ? null : 'done',
                 ),
           ),
           const SizedBox(width: 12),
@@ -203,27 +204,27 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
           _FilterChip(
             label: '🔴 High',
             color: AppColors.priorityHigh,
-            selected: filter.priorityFilter == 'high',
+            selected: filter.priority == 'high',
             onTap: () => ref.read(taskFilterProvider.notifier).setPriority(
-                  filter.priorityFilter == 'high' ? null : 'high',
+                  filter.priority == 'high' ? null : 'high',
                 ),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: '🟡 Medium',
             color: AppColors.priorityMedium,
-            selected: filter.priorityFilter == 'medium',
+            selected: filter.priority == 'medium',
             onTap: () => ref.read(taskFilterProvider.notifier).setPriority(
-                  filter.priorityFilter == 'medium' ? null : 'medium',
+                  filter.priority == 'medium' ? null : 'medium',
                 ),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: '🟢 Low',
             color: AppColors.priorityLow,
-            selected: filter.priorityFilter == 'low',
+            selected: filter.priority == 'low',
             onTap: () => ref.read(taskFilterProvider.notifier).setPriority(
-                  filter.priorityFilter == 'low' ? null : 'low',
+                  filter.priority == 'low' ? null : 'low',
                 ),
           ),
         ],
@@ -234,8 +235,8 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
   Widget _buildBody(AsyncValue<List<TaskEntity>> async) {
     return async.when(
       loading: () => const ShimmerLoader(itemCount: 6),
-      error: (e, _) => _ErrorState(onRetry: () =>
-          ref.read(taskListProvider.notifier).refresh()),
+      error: (e, _) => _ErrorState(
+          onRetry: () => ref.read(taskListProvider.notifier).refresh()),
       data: (tasks) {
         if (tasks.isEmpty) return const _EmptyState();
         return RefreshIndicator(
@@ -272,34 +273,34 @@ class _TaskCard extends StatelessWidget {
     final dueFmt =
         due != null ? DateFormat('MMM d, yyyy').format(due) : task.dueDate;
 
-    return Hero(
-      tag: 'task-${task.id}',
-      child: Material(
-        color: Colors.transparent,
-        child: GestureDetector(
-          onTap: () => context.push('/tasks/${task.id}'),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
+    return Material(
+      color: Colors.transparent,
+      child: GestureDetector(
+        onTap: () => context.push('/tasks/${task.id}'),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Hero(
+                      tag: 'task-${task.id}',
                       child: Text(
                         task.title,
                         style: GoogleFonts.inter(
@@ -307,84 +308,87 @@ class _TaskCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    StatusBadge.priority(task.priority),
-                  ],
-                ),
-                if (task.description.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    task.description,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                      height: 1.45,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(width: 8),
+                  StatusBadge.priority(task.priority),
                 ],
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    StatusBadge.status(task.status),
+              ),
+              if (task.description.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  task.description,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    height: 1.45,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  StatusBadge.status(task.status),
+                  const SizedBox(width: 8),
+                  if (task.isOverdue) ...[
+                    const OverdueBadge(),
                     const SizedBox(width: 8),
-                    if (task.isOverdue) ...[
-                      const OverdueBadge(),
-                      const SizedBox(width: 8),
-                    ],
-                    const Spacer(),
-                    if (due != null)
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today_rounded,
-                            size: 11,
+                  ],
+                  const Spacer(),
+                  if (due != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 11,
+                          color: task.isOverdue
+                              ? AppColors.overdue
+                              : AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          dueFmt,
+                          style: GoogleFonts.inter(
+                            fontSize: 11,
                             color: task.isOverdue
                                 ? AppColors.overdue
                                 : AppColors.textSecondary,
+                            fontWeight: task.isOverdue
+                                ? FontWeight.w600
+                                : FontWeight.normal,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            dueFmt,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              color: task.isOverdue
-                                  ? AppColors.overdue
-                                  : AppColors.textSecondary,
-                              fontWeight: task.isOverdue
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              if (task.assignedUser.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                const Divider(
+                  height: 1,
+                  color: AppColors.accentDim,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    _Avatar(name: task.assignedUser),
+                    const SizedBox(width: 8),
+                    Text(
+                      task.assignedUser,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
                       ),
+                    ),
                   ],
                 ),
-                if (task.assignedUser.isNotEmpty) ...[
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      _Avatar(name: task.assignedUser),
-                      const SizedBox(width: 8),
-                      Text(
-                        task.assignedUser,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ],
-            ),
+            ],
           ),
         ),
       ),
@@ -402,7 +406,12 @@ class _Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final initials = name.trim().isEmpty
         ? '?'
-        : name.split(' ').where((w) => w.isNotEmpty).take(2).map((w) => w[0].toUpperCase()).join();
+        : name
+            .split(' ')
+            .where((w) => w.isNotEmpty)
+            .take(2)
+            .map((w) => w[0].toUpperCase())
+            .join();
     return Container(
       width: 22,
       height: 22,
@@ -567,8 +576,8 @@ class _LogoutDialog extends StatelessWidget {
           style: GoogleFonts.inter(
               fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
       content: Text('You\'ll need to sign in again to access your tasks.',
-          style: GoogleFonts.inter(
-              fontSize: 13, color: AppColors.textSecondary)),
+          style:
+              GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),

@@ -1,76 +1,85 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/task_entity.dart';
-import 'task_list_provider.dart';
-
-// ─── Filter State ─────────────────────────────────────────────────────────────
+import 'package:gb_crop_assignment_task_app/features/tasks/domain/entities/task_entity.dart';
+import 'package:gb_crop_assignment_task_app/features/tasks/presentation/providers/task_list_provider.dart';
 
 class TaskFilterState {
   final String query;
-  final String? statusFilter;   // null = all
-  final String? priorityFilter; // null = all
+  final String? status;
+  final String? priority;
 
   const TaskFilterState({
     this.query = '',
-    this.statusFilter,
-    this.priorityFilter,
+    this.status,
+    this.priority,
   });
 
   TaskFilterState copyWith({
     String? query,
-    Object? statusFilter = _sentinel,
-    Object? priorityFilter = _sentinel,
-  }) =>
-      TaskFilterState(
-        query: query ?? this.query,
-        statusFilter:
-            statusFilter == _sentinel ? this.statusFilter : statusFilter as String?,
-        priorityFilter:
-            priorityFilter == _sentinel ? this.priorityFilter : priorityFilter as String?,
-      );
+    String? status,
+    String? priority,
+  }) {
+    return TaskFilterState(
+      query: query ?? this.query,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+    );
+  }
 }
 
-const _sentinel = Object();
-
+//🧠 Notifier (simple)
 class TaskFilterNotifier extends StateNotifier<TaskFilterState> {
   TaskFilterNotifier() : super(const TaskFilterState());
 
-  void setQuery(String q) => state = state.copyWith(query: q);
+  void setQuery(String value) {
+    state = state.copyWith(query: value);
+  }
 
-  void setStatus(String? s) => state = state.copyWith(statusFilter: s);
+  void setStatus(String? value) {
+    state = state.copyWith(status: value);
+  }
 
-  void setPriority(String? p) => state = state.copyWith(priorityFilter: p);
+  void setPriority(String? value) {
+    state = state.copyWith(priority: value);
+  }
 
-  void reset() => state = const TaskFilterState();
+  void reset() {
+    state = const TaskFilterState();
+  }
 }
 
+//🧩 Provider
 final taskFilterProvider =
     StateNotifierProvider<TaskFilterNotifier, TaskFilterState>(
   (ref) => TaskFilterNotifier(),
 );
 
-// ─── Derived: filtered list ───────────────────────────────────────────────────
-
+//🧮 Filtered Tasks
 final filteredTasksProvider = Provider<AsyncValue<List<TaskEntity>>>((ref) {
   final tasksAsync = ref.watch(taskListProvider);
   final filter = ref.watch(taskFilterProvider);
 
-  return tasksAsync.whenData((tasks) {
-    var filtered = tasks;
+  return tasksAsync.when(
+    data: (tasks) {
+      var result = tasks;
 
-    if (filter.query.isNotEmpty) {
-      final q = filter.query.toLowerCase();
-      filtered = filtered.where((t) => t.title.toLowerCase().contains(q)).toList();
-    }
+      if (filter.query.isNotEmpty) {
+        result = result
+            .where((t) =>
+                t.title.toLowerCase().contains(filter.query.toLowerCase()))
+            .toList();
+      }
 
-    if (filter.statusFilter != null) {
-      filtered = filtered.where((t) => t.status == filter.statusFilter).toList();
-    }
+      if (filter.status != null) {
+        result = result.where((t) => t.status == filter.status).toList();
+      }
 
-    if (filter.priorityFilter != null) {
-      filtered =
-          filtered.where((t) => t.priority == filter.priorityFilter).toList();
-    }
+      if (filter.priority != null) {
+        result = result.where((t) => t.priority == filter.priority).toList();
+      }
 
-    return filtered;
-  });
+      return AsyncValue.data(result);
+    },
+    loading: () => const AsyncValue.loading(),
+    error: (e, st) => AsyncValue.error(e, st),
+  );
 });

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/sources/auth_remote_source.dart';
-import '../../domain/entities/user_entity.dart';
+import '../../data/models/user_entity.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/storage/secure_storage.dart';
 
@@ -15,8 +15,7 @@ final authRemoteSourceProvider = Provider<AuthRemoteSource>(
 );
 
 final authRepositoryProvider = Provider<AuthRepositoryImpl>(
-  (ref) =>
-      AuthRepositoryImpl(remote: ref.watch(authRemoteSourceProvider)),
+  (ref) => AuthRepositoryImpl(remote: ref.watch(authRemoteSourceProvider)),
 );
 
 // ─── Auth State ───────────────────────────────────────────────────────────────

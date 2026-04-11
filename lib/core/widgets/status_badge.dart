@@ -9,8 +9,7 @@ class StatusBadge extends StatelessWidget {
   final BadgeType type;
 
   const StatusBadge.status(this.value, {super.key}) : type = BadgeType.status;
-  const StatusBadge.priority(this.value, {super.key})
-      : type = BadgeType.priority;
+  const StatusBadge.priority(this.value, {super.key}) : type = BadgeType.priority;
 
   @override
   Widget build(BuildContext context) {

@@ -11,8 +11,7 @@ final taskRemoteSourceProvider = Provider<TaskRemoteSource>(
 );
 
 final taskRepositoryProvider = Provider<TaskRepositoryImpl>(
-  (ref) =>
-      TaskRepositoryImpl(remote: ref.watch(taskRemoteSourceProvider)),
+  (ref) => TaskRepositoryImpl(remote: ref.watch(taskRemoteSourceProvider)),
 );
 
 // ─── Task List State ──────────────────────────────────────────────────────────

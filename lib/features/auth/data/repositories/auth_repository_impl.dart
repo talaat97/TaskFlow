@@ -1,16 +1,22 @@
-import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/auth_repository.dart';
+import '../models/user_entity.dart';
 import '../models/auth_model.dart';
 import '../sources/auth_remote_source.dart';
 import '../../../../core/storage/secure_storage.dart';
 
+abstract class AuthRepository {
+  Future<UserEntity> login({
+    required String email,
+    required String password,
+  });
+  Future<void> logout();
+}
+
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteSource _remote;
 
-  const AuthRepositoryImpl({required AuthRemoteSource remote})
-      : _remote = remote;
+  const AuthRepositoryImpl({required AuthRemoteSource remote}): _remote = remote;
 
-  @override
+  @override 
   Future<UserEntity> login({
     required String email,
     required String password,
