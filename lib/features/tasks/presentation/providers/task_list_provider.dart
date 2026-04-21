@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/sources/task_remote_source.dart';
-import '../../domain/entities/task_entity.dart';
+import '../../data/models/task_entity.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 // ─── Infrastructure ───────────────────────────────────────────────────────────
@@ -10,15 +10,17 @@ final taskRemoteSourceProvider = Provider<TaskRemoteSource>(
   (ref) => TaskRemoteSource(dio: ref.watch(dioProvider)),
 );
 
-final taskRepositoryProvider = Provider<TaskRepositoryImpl>(
-  (ref) => TaskRepositoryImpl(remote: ref.watch(taskRemoteSourceProvider)),
+final taskRepositoryProvider = Provider<TaskRepository>(
+  (ref) => TaskRepository(remote: ref.watch(taskRemoteSourceProvider)),
 );
 
 // ─── Task List State ──────────────────────────────────────────────────────────
 
 class TaskListNotifier extends AsyncNotifier<List<TaskEntity>> {
   @override
-  Future<List<TaskEntity>> build() => _fetch();
+  Future<List<TaskEntity>> build() {
+    return _fetch();
+  }
 
   Future<List<TaskEntity>> _fetch() =>
       ref.read(taskRepositoryProvider).getTasks();

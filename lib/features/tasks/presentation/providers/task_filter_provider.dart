@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gb_crop_assignment_task_app/features/tasks/domain/entities/task_entity.dart';
+import 'package:gb_crop_assignment_task_app/features/tasks/data/models/task_entity.dart';
 import 'package:gb_crop_assignment_task_app/features/tasks/presentation/providers/task_list_provider.dart';
 
 class TaskFilterState {

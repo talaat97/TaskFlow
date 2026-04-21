@@ -1,8 +1,8 @@
-class LoginRequest {
+class AuthRequest {
   final String email;
   final String password;
 
-  const LoginRequest({required this.email, required this.password});
+  const AuthRequest({required this.email, required this.password});
 
   Map<String, dynamic> toJson() => {
         'email': email,

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/task_entity.dart';
+import '../../data/models/task_entity.dart';
 import '../providers/task_list_provider.dart';
 import '../../../../core/widgets/error_snackbar.dart';
 import '../../../../app/theme.dart';
@@ -357,7 +357,7 @@ class _Dropdown<T> extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.border),
       ),
-      child: DropdownButton<T>(
+      child: DropdownButton(
         value: value,
         isExpanded: true,
         underline: const SizedBox.shrink(),

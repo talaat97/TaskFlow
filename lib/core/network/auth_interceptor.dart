@@ -16,7 +16,8 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+    var  statusCode = err.response?.statusCode;
+    if (statusCode == 401 || statusCode == 402) {
       await SecureStorageService.clearAll();
       // GoRouter's refreshListenable will handle redirect to /login
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gb_crop_assignment_task_app/features/auth/presentation/screens/widgets/helper_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/auth_provider.dart';
@@ -31,7 +32,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         vsync: this, duration: const Duration(milliseconds: 700));
     _fade = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
     _slide = Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
+        .animate(
+            CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
     _animCtrl.forward();
   }
 
@@ -85,9 +87,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   position: _slide,
                   child: Column(
                     children: [
-                      _LogoHeader(),
+                      const LogoHeader(),
                       const SizedBox(height: 36),
-                      _buildCard(authState.isLoading),
+                      buildCard(authState.isLoading),
                     ],
                   ),
                 ),
@@ -99,7 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     );
   }
 
-  Widget _buildCard(bool loading) {
+  Widget buildCard(bool loading) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 28, 24, 28),
       decoration: BoxDecoration(
@@ -129,29 +131,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 style: GoogleFonts.inter(
                     fontSize: 13, color: AppColors.textSecondary)),
             const SizedBox(height: 28),
-            _EmailField(controller: _emailCtrl),
+            EmailField(controller: _emailCtrl),
             const SizedBox(height: 14),
-            _PasswordField(
+            PasswordField(
               controller: _passwordCtrl,
               obscure: _obscure,
               onToggle: () => setState(() => _obscure = !_obscure),
               onSubmit: _submit,
             ),
             const SizedBox(height: 28),
-            _SubmitButton(loading: loading, onTap: _submit),
+            SubmitButton(loading: loading, onTap: _submit),
             const SizedBox(height: 20),
-            _buildHint(),
+            buildHint(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHint() {
+  Widget buildHint() {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+          style:
+              GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
           children: const [
             TextSpan(text: 'Demo: '),
             TextSpan(
@@ -167,161 +170,3 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 }
 
 // ─── Sub-widgets ──────────────────────────────────────────────────────────────
-
-class _LogoHeader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 72,
-          height: 72,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.accent, AppColors.accentLight],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.accent.withValues(alpha: 0.4),
-                blurRadius: 22,
-                spreadRadius: 3,
-              ),
-            ],
-          ),
-          child: const Icon(Icons.task_alt_rounded,
-              color: Colors.white, size: 36),
-        ),
-        const SizedBox(height: 18),
-        Text('TaskFlow',
-            style: GoogleFonts.inter(
-              fontSize: 30,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
-              letterSpacing: -1,
-            )),
-        const SizedBox(height: 5),
-        Text('Manage your work, beautifully.',
-            style: GoogleFonts.inter(
-                fontSize: 13, color: AppColors.textSecondary)),
-      ],
-    );
-  }
-}
-
-class _EmailField extends StatelessWidget {
-  final TextEditingController controller;
-  const _EmailField({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.next,
-      style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 15),
-      decoration: _inputDec('Email address', Icons.mail_outline_rounded),
-      validator: (v) {
-        if (v == null || v.trim().isEmpty) return 'Email is required';
-        final re = RegExp(r'^[\w\-\.]+@([\w\-]+\.)+[\w]{2,}$');
-        if (!re.hasMatch(v.trim())) return 'Enter a valid email address';
-        return null;
-      },
-    );
-  }
-}
-
-class _PasswordField extends StatelessWidget {
-  final TextEditingController controller;
-  final bool obscure;
-  final VoidCallback onToggle;
-  final VoidCallback onSubmit;
-
-  const _PasswordField({
-    required this.controller,
-    required this.obscure,
-    required this.onToggle,
-    required this.onSubmit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (_) => onSubmit(),
-      style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 15),
-      decoration: _inputDec('Password', Icons.lock_outline_rounded).copyWith(
-        suffixIcon: IconButton(
-          onPressed: onToggle,
-          icon: Icon(
-            obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-            size: 20,
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ),
-      validator: (v) {
-        if (v == null || v.isEmpty) return 'Password is required';
-        if (v.length < 6) return 'Must be at least 6 characters';
-        return null;
-      },
-    );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  final bool loading;
-  final VoidCallback onTap;
-  const _SubmitButton({required this.loading, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: ElevatedButton(
-        key: const Key('login_submit_button'),
-        onPressed: loading ? null : onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.accent,
-          disabledBackgroundColor: AppColors.accentDim,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: loading
-              ? const SizedBox(
-                  key: ValueKey('spinner'),
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.white70),
-                  ),
-                )
-              : Text(
-                  key: const ValueKey('label'),
-                  'Sign In',
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-        ),
-      ),
-    );
-  }
-}
-
-InputDecoration _inputDec(String label, IconData icon) {
-  return InputDecoration(
-    labelText: label,
-    prefixIcon: Icon(icon, size: 20, color: AppColors.textSecondary),
-  );
-}

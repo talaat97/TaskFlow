@@ -1,5 +1,4 @@
-import '../../domain/entities/task_entity.dart';
-import '../../domain/repositories/task_repository.dart';
+import '../models/task_entity.dart';
 import '../models/task_model.dart';
 import '../sources/task_remote_source.dart';
 
@@ -23,36 +22,30 @@ TaskEntity _toEntity(TaskModel m) => TaskEntity(
       assignedUser: m.assignedUser,
     );
 
-class TaskRepositoryImpl implements TaskRepository {
+class TaskRepository {
   final TaskRemoteSource _remote;
 
-  const TaskRepositoryImpl({required TaskRemoteSource remote})
-      : _remote = remote;
+  TaskRepository({required TaskRemoteSource remote}) : _remote = remote;
 
-  @override
   Future<List<TaskEntity>> getTasks() async {
     final models = await _remote.getTasks();
     return models.map(_toEntity).toList();
   }
 
-  @override
   Future<TaskEntity> getTask(int id) async {
     final model = await _remote.getTask(id);
     return _toEntity(model);
   }
 
-  @override
   Future<TaskEntity> createTask(TaskEntity task) async {
     final model = await _remote.createTask(_toModel(task));
     return _toEntity(model);
   }
 
-  @override
   Future<TaskEntity> updateTask(TaskEntity task) async {
     final model = await _remote.updateTask(_toModel(task));
     return _toEntity(model);
   }
 
-  @override
   Future<void> deleteTask(int id) => _remote.deleteTask(id);
 }

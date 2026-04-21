@@ -6,7 +6,7 @@ class AuthRemoteSource {
 
   const AuthRemoteSource({required Dio dio}) : _dio = dio;
 
-  Future<AuthResponse> login(LoginRequest request) async {
+  Future<AuthResponse> login(AuthRequest request) async {
     final response = await _dio.post(
       '/login',
       data: request.toJson(),

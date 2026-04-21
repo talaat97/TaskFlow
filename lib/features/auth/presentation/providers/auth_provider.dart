@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/repositories/auth_repository_impl.dart';
+import '../../data/repositories/auth_repository.dart';
 import '../../data/sources/auth_remote_source.dart';
 import '../../data/models/user_entity.dart';
 import '../../../../core/network/dio_client.dart';
@@ -14,8 +14,8 @@ final authRemoteSourceProvider = Provider<AuthRemoteSource>(
   (ref) => AuthRemoteSource(dio: ref.watch(dioProvider)),
 );
 
-final authRepositoryProvider = Provider<AuthRepositoryImpl>(
-  (ref) => AuthRepositoryImpl(remote: ref.watch(authRemoteSourceProvider)),
+final authRepositoryProvider = Provider<AuthRepository>(
+  (ref) => AuthRepository(remote: ref.watch(authRemoteSourceProvider)),
 );
 
 // ─── Auth State ───────────────────────────────────────────────────────────────
@@ -45,12 +45,14 @@ class AuthState {
       );
 
   bool get isAuthenticated => status == AuthStatus.authenticated;
+  bool get isLoading => status == AuthStatus.loading;
+  bool get hasError => status == AuthStatus.error;
 }
 
 // ─── Notifier ─────────────────────────────────────────────────────────────────
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  final AuthRepositoryImpl _repo;
+  final AuthRepository _repo;
 
   AuthNotifier(this._repo) : super(const AuthState());
 
@@ -97,14 +99,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authNotifierProvider =
-    StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(ref.watch(authRepositoryProvider)),
-);
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+    (ref) => AuthNotifier(ref.watch(authRepositoryProvider)));
 
 // ─── Convenience read helper ─────────────────────────────────────────────────
-
-extension AuthStateX on AuthState {
-  bool get isLoading => status == AuthStatus.loading;
-  bool get hasError => status == AuthStatus.error;
-}
