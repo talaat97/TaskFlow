@@ -4,7 +4,7 @@
 /// - USB (adb reverse)  → phone's localhost:3000 maps to PC's localhost:3000
 /// - Wi-Fi only         → change [kDevMachineIp] and set [kUseAdbReverse] = false
 const bool kUseAdbReverse = true; // ← set false if using Wi-Fi instead of USB
-const String kDevMachineIp = '192.168.1.7';
+const String kDevMachineIp = '192.168.1.2';
 
 const String kBaseUrl = 'http://$kDevMachineIp:3000';
 
