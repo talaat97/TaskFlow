@@ -7,12 +7,16 @@ class DioClient {
 
   static Dio? _instance;
 
+  static void init({Future<void> Function()? onUnauthorized}) {
+    _instance = _build(onUnauthorized: onUnauthorized);
+  }
+
   static Dio get instance {
     _instance ??= _build();
     return _instance!;
   }
 
-  static Dio _build() {
+  static Dio _build({Future<void> Function()? onUnauthorized}) {
     final dio = Dio(
       BaseOptions(
         baseUrl: kBaseUrl,
@@ -26,7 +30,7 @@ class DioClient {
     );
 
     dio.interceptors.addAll([
-      AuthInterceptor(),
+      AuthInterceptor(onUnauthorized: onUnauthorized),
       LogInterceptor(
         requestBody: true,
         responseBody: true,

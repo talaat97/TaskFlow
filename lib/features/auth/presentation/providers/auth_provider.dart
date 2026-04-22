@@ -101,5 +101,3 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
     (ref) => AuthNotifier(ref.watch(authRepositoryProvider)));
-
-// ─── Convenience read helper ─────────────────────────────────────────────────

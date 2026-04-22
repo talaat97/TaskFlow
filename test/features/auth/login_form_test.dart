@@ -20,7 +20,7 @@ Widget _buildTestApp() {
 
   return ProviderScope(
     child: MaterialApp.router(
-      theme: AppTheme.dark,
+      theme: AppTheme.darkTheme,
       routerConfig: router,
     ),
   );

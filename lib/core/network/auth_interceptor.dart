@@ -2,6 +2,10 @@ import 'package:dio/dio.dart';
 import '../storage/secure_storage.dart';
 
 class AuthInterceptor extends Interceptor {
+  final Future<void> Function()? onUnauthorized;
+
+  AuthInterceptor({this.onUnauthorized});
+
   @override
   Future<void> onRequest(
     RequestOptions options,
@@ -16,10 +20,11 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    var  statusCode = err.response?.statusCode;
+    var statusCode = err.response?.statusCode;
     if (statusCode == 401 || statusCode == 402) {
       await SecureStorageService.clearAll();
-      // GoRouter's refreshListenable will handle redirect to /login
+
+      await onUnauthorized?.call();
     }
     return handler.next(err);
   }
